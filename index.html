@@ -3,161 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tavli Master Tournament</title>
+    <title>Tavli Elite Tournament</title>
     <style>
-        :root {
-            --wood: #3e2723;
-            --gold: #d4af37;
-            --light: #f5f5f5;
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            background: url('https://img.freepik.com/free-photo/top-view-backgammon-board-with-checkers-dice_23-2148283311.jpg?t=st=1715694532~exp=1715698132~hmac=56d0d297a7d4a25925a17623910c660f666f6c6d6d6d6d6d6d6d6d6d') no-repeat center center fixed;
+            background-size: cover;
+            color: white;
         }
-        body { 
-            font-family: 'Segoe UI', sans-serif; 
-            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1590074213038-038c11765955?auto=format&fit=crop&q=80&w=1000');
-            background-size: cover; background-attachment: fixed;
-            color: var(--light); margin: 0; padding: 10px;
+
+        .overlay {
+            background: rgba(0, 0, 0, 0.85);
+            min-height: 100vh;
+            padding: 20px;
         }
-        .app-container { max-width: 500px; margin: auto; }
-        .header { background: var(--wood); border: 2px solid var(--gold); border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
-        .clock { font-size: 1.2em; color: var(--gold); font-weight: bold; margin-bottom: 10px; }
-        
-        .card { background: rgba(62, 39, 35, 0.9); border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #5d4037; }
-        h2 { border-bottom: 2px solid var(--gold); padding-bottom: 5px; color: var(--gold); margin-top: 0; font-size: 1.3em; }
 
-        input, select { padding: 12px; border-radius: 8px; border: none; margin-bottom: 10px; font-size: 16px; width: -webkit-fill-available; }
-        button { padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; transition: 0.2s; }
-        .btn-gold { background: var(--gold); color: black; width: 100%; }
-        .btn-green { background: #2e7d32; color: white; width: 100%; margin-top: 10px; }
-        
-        .player-row { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); margin: 5px 0; padding: 8px 12px; border-radius: 8px; }
-        .score-controls button { padding: 5px 10px; margin-left: 5px; background: #5d4037; color: white; }
-        .delete-btn { background: #c62828 !important; font-size: 12px; padding: 5px !important; }
+        .container { max-width: 600px; margin: auto; }
 
-        .match-card { background: #1b5e20; border: 2px solid var(--gold); padding: 15px; border-radius: 10px; margin-top: 10px; font-size: 1.1em; display: flex; justify-content: space-around; align-items: center; }
-        .vs-badge { background: var(--gold); color: black; padding: 2px 8px; border-radius: 5px; font-size: 0.8em; font-weight: bold; }
+        .header {
+            text-align: center;
+            border: 3px solid #d4af37;
+            padding: 20px;
+            border-radius: 20px;
+            background: rgba(62, 39, 35, 0.9);
+            margin-bottom: 20px;
+        }
+
+        .card {
+            background: rgba(45, 45, 45, 0.9);
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border-left: 5px solid #d4af37;
+        }
+
+        h2 { color: #d4af37; margin-top: 0; font-size: 1.2rem; }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border-radius: 8px;
+            border: none;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-gold { background: #d4af37; color: black; }
+        .btn-red { background: #c62828; color: white; margin-top: 5px; padding: 5px; font-size: 12px; width: auto; }
+        .btn-start { background: #2e7d32; color: white; font-size: 1.2rem; }
+
+        .player-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.1);
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 8px;
+        }
+
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         
-        .leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-        .leaderboard-table th { color: var(--gold); text-align: left; }
-        .leaderboard-table td { padding: 8px 0; border-bottom: 1px solid #5d4037; }
-        .points-box { color: var(--gold); font-weight: bold; font-size: 1.2em; }
+        #timer { font-size: 2rem; color: #ff5252; font-weight: bold; }
+        
+        .prize-tag { color: #d4af37; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div class="app-container">
-    <div class="header">
-        <div class="clock" id="clock">00:00:00</div>
-        <h1 style="margin:0; font-size:1.5em;">🎲 TAVLI CHAMPIONS</h1>
-    </div>
-
-    <!-- Ρυθμίσεις -->
-    <div class="card">
-        <h2>⚙️ ΡΥΘΜΙΣΕΙΣ</h2>
-        <input type="text" id="prize" placeholder="Έπαθλο (π.χ. Καφές / 50€)">
-        <input type="number" id="maxPoints" placeholder="Πόντοι για τη νίκη (π.χ. 7)">
-    </div>
-
-    <!-- Προσθήκη Παικτών -->
-    <div class="card">
-        <h2>👥 ΠΑΙΚΤΕΣ</h2>
-        <div style="display:flex; gap:5px;">
-            <input type="text" id="playerName" placeholder="Όνομα..." style="margin:0;">
-            <button class="btn-gold" onclick="addPlayer()" style="width:auto;">+</button>
+<div class="overlay">
+    <div class="container">
+        
+        <div class="header">
+            <h1>🎲 TAVLI PRO ELITE</h1>
+            <div id="startTimeDisplay">Ορισμός έναρξης...</div>
+            <div id="timer">00:00:00</div>
         </div>
-        <div id="playerList" style="margin-top:15px;"></div>
-    </div>
 
-    <!-- Κλήρωση -->
-    <div class="card">
-        <button class="btn-green" onclick="drawMatches()">🔥 ΚΛΗΡΩΣΗ ΖΕΥΓΑΡΙΩΝ</button>
-        <div id="matchDisplay"></div>
-    </div>
+        <!-- Ρυθμίσεις Διοργανωτή -->
+        <div class="card">
+            <h2>⚙️ ΡΥΘΜΙΣΕΙΣ ΤΟΥΡΝΟΥΑ</h2>
+            <div class="stats-grid">
+                <input type="number" id="maxPlayers" placeholder="Μέγιστοι Παίκτες (π.χ. 16)">
+                <input type="time" id="gameTime">
+            </div>
+            <input type="text" id="prize1" placeholder="Έπαθλο 1ου Νικητή">
+            <input type="text" id="prize2" placeholder="Έπαθλο 2ου Νικητή">
+            <input type="text" id="prize3" placeholder="Έπαθλο 3ου Νικητή">
+            <button class="btn btn-gold" onclick="saveSettings()">ΚΛΕΙΔΩΜΑ ΡΥΘΜΙΣΕΩΝ</button>
+        </div>
 
-    <!-- Κατάταξη -->
-    <div class="card">
-        <h2>🏆 ΚΑΤΑΤΑΞΗ</h2>
-        <table class="leaderboard-table">
-            <thead>
-                <tr><th>Θέση</th><th>Παίκτης</th><th>Πόντοι</th></tr>
-            </thead>
-            <tbody id="rankingTable"></tbody>
-        </table>
-        <div id="prizeDisplay" style="margin-top:15px; color:var(--gold); font-weight:bold;"></div>
+        <!-- Συμμετοχή -->
+        <div class="card">
+            <h2>📝 ΔΗΛΩΣΗ ΣΥΜΜΕΤΟΧΗΣ</h2>
+            <div id="limitMsg"></div>
+            <input type="text" id="pName" placeholder="Το όνομά σου...">
+            <button id="regBtn" class="btn btn-gold" onclick="register()">ΔΗΛΩΣΗ ΤΩΡΑ</button>
+        </div>
+
+        <!-- Λίστα & Ζευγάρια -->
+        <div class="card">
+            <h2>👥 ΛΙΣΤΑ ΠΑΙΚΤΩΝ (<span id="count">0</span>)</h2>
+            <div id="playerList"></div>
+            <button class="btn btn-start" onclick="startTournament()">🔥 ΕΝΑΡΞΗ ΚΛΗΡΩΣΗΣ</button>
+            <div id="matchBoard"></div>
+        </div>
+
+        <!-- Έπαθλα -->
+        <div class="card">
+            <h2>🏆 ΕΠΑΘΛΑ</h2>
+            <p>🥇 1ος: <span id="p1" class="prize-tag">-</span></p>
+            <p>🥈 2ος: <span id="p2" class="prize-tag">-</span></p>
+            <p>🥉 3ος: <span id="p3" class="prize-tag">-</span></p>
+        </div>
+
     </div>
 </div>
 
 <script>
     let players = [];
+    let maxCap = 100;
 
-    // Ρολόι
-    function updateClock() {
-        const now = new Date();
-        document.getElementById('clock').innerText = now.toLocaleTimeString('el-GR');
+    function saveSettings() {
+        maxCap = document.getElementById('maxPlayers').value || 100;
+        document.getElementById('p1').innerText = document.getElementById('prize1').value || "-";
+        document.getElementById('p2').innerText = document.getElementById('prize2').value || "-";
+        document.getElementById('p3').innerText = document.getElementById('prize3').value || "-";
+        const timeVal = document.getElementById('gameTime').value;
+        if(timeVal) document.getElementById('startTimeDisplay').innerText = "Έναρξη στις: " + timeVal;
+        alert("Οι ρυθμίσεις αποθηκεύτηκαν!");
     }
-    setInterval(updateClock, 1000);
 
-    // Προσθήκη
-    function addPlayer() {
-        const name = document.getElementById('playerName').value.trim();
+    function register() {
+        const name = document.getElementById('pName').value.trim();
         if(!name) return;
-        players.push({ name: name, score: 0 });
-        document.getElementById('playerName').value = "";
-        renderAll();
-    }
-
-    // Διαγραφή με ερώτηση
-    function deletePlayer(index) {
-        if(confirm("Είσαι σίγουρος ότι θέλεις να διαγράψεις τον παίκτη " + players[index].name + ";")) {
-            players.splice(index, 1);
-            renderAll();
-        }
-    }
-
-    // Διαχείριση Σκορ
-    function updateScore(index, val) {
-        players[index].score += val;
-        if(players[index].score < 0) players[index].score = 0;
         
-        const limit = document.getElementById('maxPoints').value;
-        if(limit && players[index].score >= limit) {
-            alert("🏆 Ο " + players[index].name + " ΕΙΝΑΙ Ο ΝΙΚΗΤΗΣ ΤΟΥ ΤΟΥΡΝΟΥΑ!");
+        if(players.length >= maxCap) {
+            alert("Το τουρνουά είναι γεμάτο!");
+            return;
         }
-        renderAll();
+
+        players.push(name);
+        document.getElementById('pName').value = "";
+        updateUI();
     }
 
-    // Κλήρωση
-    function drawMatches() {
-        if(players.length < 2) return alert("Χρειάζονται τουλάχιστον 2 παίκτες!");
-        let shuffled = [...players].sort(() => Math.random() - 0.5);
-        let html = "<h2>ΑΓΩΝΕΣ</h2>";
-        for(let i=0; i<shuffled.length; i+=2) {
-            if(shuffled[i+1]) {
-                html += `<div class="match-card">
-                            <span>${shuffled[i].name}</span>
-                            <span class="vs-badge">VS</span>
-                            <span>${shuffled[i+1].name}</span>
-                         </div>`;
-            } else {
-                html += `<div class="match-card" style="background:#455a64">
-                            <span>${shuffled[i].name}</span>
-                            <span class="vs-badge">BYE (ΠΕΡΝΑΕΙ)</span>
-                         </div>`;
-            }
+    function removePlayer(index) {
+        if(confirm("Θέλεις σίγουρα να διαγράψεις τον παίκτη " + players[index] + ";")) {
+            players.splice(index, 1);
+            updateUI();
         }
-        document.getElementById('matchDisplay').innerHTML = html;
     }
 
-    function renderAll() {
-        // Λίστα Διαγραφής
+    function updateUI() {
+        document.getElementById('count').innerText = players.length;
         const list = document.getElementById('playerList');
         list.innerHTML = players.map((p, i) => `
-            <div class="player-row">
-                <span>${p.name}</span>
-                <div class="score-controls">
-                    <button onclick="updateScore(${i}, 1)">+1</button>
-                    <button class="delete-btn" onclick="deletePlayer(${i})">X</button>
-                </div>
+            <div class="player-item">
+                <span>${i+1}. ${p}</span>
+                <button class="btn btn-red" onclick="removePlayer(${i})">Διαγραφή</button>
             </div>
         `).join('');
 
-        // Πίνακας Κατάταξης (Sort by score)
-        const sorted = [...players].sort((a,b) => b.s
+        if(players.length >= maxCap) {
+            document.getElementById('regBtn').disabled = true;
+            document.getElementById('limitMsg').innerText = "🚫 ΟΙ ΣΥΜΜΕΤΟΧΕΣ ΕΚΛΕΙΣΑΝ";
+        }
+    }
+
+    function startTournament() {
+        if(players.length < 2) return alert("Χρειάζονται παίκτες!");
+        let shuffled = [...players].sort(() => Math.random() - 0.5);
+        let html = "<h3>🎲 ΖΕΥΓΑΡΙΑ ΠΡΩΤΟΥ ΓΥΡΟΥ</h3>";
+        for(let i=0; i<shuffled.length; i+=2) {
+            html += `<div style="background:#d4af37; color:black; padding:10px; margin:5px; border-radius:5px; font-weight:bold;">
+                ${shuffled[i]} VS ${shuffled[i+1] || '--- (BYE)'}
+            </div>`;
+        }
+        document.getElementById('matchBoard').innerHTML = html;
+    }
+
+    // Αντίστροφη Μέτρηση (Απλή απεικόνιση)
+    setInterval(() => {
+        const d = new Date();
