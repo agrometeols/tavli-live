@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Τάβλι Tournament Pro</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background: #2c1a12; 
+            color: #f0d9b5; 
+            text-align: center; 
+            padding: 20px; 
+        }
+        .board { 
+            max-width: 500px; 
+            margin: auto; 
+            background: #4d2d1e; 
+            padding: 30px; 
+            border-radius: 20px; 
+            border: 10px solid #361f15; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8); 
+        }
+        h1 { color: #f39c12; text-shadow: 2px 2px #000; }
+        .input-area { margin-bottom: 20px; display: flex; gap: 5px; }
+        input { 
+            flex: 1; 
+            padding: 12px; 
+            border-radius: 5px; 
+            border: none; 
+            font-size: 16px; 
+        }
+        button { 
+            padding: 10px 15px; 
+            border-radius: 5px; 
+            border: none; 
+            cursor: pointer; 
+            font-weight: bold; 
+            transition: 0.3s; 
+        }
+        .add-btn { background: #f39c12; color: #000; }
+        .draw-btn { 
+            background: #27ae60; 
+            color: white; 
+            width: 100%; 
+            font-size: 1.2em; 
+            margin-top: 10px; 
+        }
+        ul { list-style: none; padding: 0; text-align: left; }
+        li { 
+            background: #3d2418; 
+            margin: 5px 0; 
+            padding: 10px; 
+            border-radius: 5px; 
+            border-left: 4px solid #f39c12; 
+            display: flex; 
+            justify-content: space-between; 
+        }
+        .match-card { 
+            background: #5d3a2a; 
+            padding: 15px; 
+            margin-top: 15px; 
+            border-radius: 10px; 
+            border: 1px solid #7d5a4a; 
+            font-size: 1.2em; 
+            font-weight: bold; 
+            color: #fff; 
+        }
+        .vs { color: #f39c12; font-style: italic; font-size: 0.8em; }
+    </style>
+</head>
+<body>
+
+<div class="board">
+    <h1>🎲 Tournoua Tavli</h1>
+    <div class="input-area">
+        <input type="text" id="pName" placeholder="Όνομα παίκτη...">
+        <button class="add-btn" onclick="addPlayer()">Προσθήκη</button>
+    </div>
+    <ul id="list"></ul>
+    <button class="draw-btn" onclick="generate()">🔥 ΕΝΑΡΞΗ ΚΛΗΡΩΣΗΣ</button>
+    <div id="results"></div>
+</div>
+
+<script>
+    let players = [];
+    function addPlayer() {
+        const inp = document.getElementById('pName');
+        if(inp.value.trim() !== "") {
+            players.push(inp.value.trim());
+            render();
+            inp.value = "";
+        }
+    }
+    function render() {
+        document.getElementById('list').innerHTML = players.map(p => `<li>👤 ${p}</li>`).join('');
+    }
+    function generate() {
+        if(players.length < 2) return alert("Βάλε τουλάχιστον 2 παίκτες!");
+        let shuffled = [...players].sort(() => Math.random() - 0.5);
+        let resHTML = "<h2>Τα Ζευγάρια:</h2>";
+        for(let i=0; i < shuffled.length; i+=2) {
+            if(shuffled[i+1]) {
+                resHTML += `<div class="match-card">${shuffled[i]} <span class="vs">VS</span> ${shuffled[i+1]}</div>`;
+            } else {
+                resHTML += `<div class="match-card" style="border-color: #27ae60;">🌟 ${shuffled[i]} <br><span style="font-size:0.6em; color:#27ae60">ΠΕΡΝΑΕΙ BYE (ΧΩΡΙΣ ΑΝΤΙΠΑΛΟ)</span></div>`;
+            }
+        }
+        document.getElementById('results').innerHTML = resHTML;
+    }
+</script>
+
+</body>
+</html>
