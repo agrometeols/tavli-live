@@ -39,6 +39,7 @@ border: 1px solid #555; background: #111; color: white; box-sizing: border-box;
 .btn-draw { background: #2e7d32; color: white; }
 
 .master-only { display: none; border: 2px dashed #d4af37; padding: 15px; margin-bottom: 20px; border-radius: 15px; }
+.master-controls-row { display: flex; gap: 10px; margin: 10px 0; }
 .prize-item { font-size: 1.4rem; font-weight: bold; margin: 10px 0; }
 .prize-item span { color: #d4af37; }
 
@@ -73,6 +74,15 @@ background: rgba(255,255,255,0.08); padding: 12px; margin: 6px 0; border-radius:
 <input type="text" id="m-p3" placeholder="Έπαθλο 3ου">
 <label style="font-size: 0.8rem;">Λήξη Εγγραφών:</label>
 <input type="datetime-local" id="m-limit">
+
+<div class="master-controls-row">
+<select id="m-draw-status" style="width: 100%; padding: 10px; border-radius: 8px; background: #222; color: white; border: 1px solid #d4af37;">
+<option value="on">Κλήρωση: ΕΝΕΡΓΗ</option>
+<option value="off">Κλήρωση: ΑΠΕΝΕΡΓΟΠΟΙΗΜΕΝΗ</option>
+</select>
+<button class="btn" style="background: #e67e22; color: white; padding: 10px; font-size: 0.8rem;" onclick="resetDrawOnly()">🔄 RESET ΚΛΗΡΩΣΗΣ</button>
+</div>
+
 <button class="btn btn-gold" onclick="updateSettings()">💾 ΕΠΙΚΥΡΩΣΗ & LIVE ΕΝΗΜΕΡΩΣΗ</button>
 <button class="btn" style="background:#444; color:white; font-size:0.7rem;" onclick="resetDB()">⚠️ RESET ALL DATA</button>
 </div>
@@ -94,9 +104,9 @@ background: rgba(255,255,255,0.08); padding: 12px; margin: 6px 0; border-radius:
 </div>
 
 <!-- ΚΛΗΡΩΣΗ -->
-<div class="card">
+<div class="card" id="draw-card">
 <h2>🎲 ΚΛΗΡΩΣΗ ΖΕΥΓΑΡΙΩΝ</h2>
-<button class="btn btn-draw" onclick="makeDrawLive()">🔥 ΚΛΗΡΩΣΗ ΤΩΡΑ</button>
+<button id="draw-btn-main" class="btn btn-draw" onclick="makeDrawLive()">🔥 ΚΛΗΡΩΣΗ ΤΩΡΑ</button>
 <div id="draw-area"></div>
 </div>
 
@@ -112,7 +122,6 @@ background: rgba(255,255,255,0.08); padding: 12px; margin: 6px 0; border-radius:
 </div>
 
 <script>
-// ΤΑ ΚΛΕΙΔΙΑ ΣΟΥ ΧΡΗΣΤΟ
 const firebaseConfig = {
 apiKey: "AIzaSyBzj0R89LLxffLoDg9Jn-Jl_bgAnVRwWys",
 authDomain: "tavli-live.firebaseapp.com",
@@ -127,7 +136,6 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 let isMaster = false;
 
-// LIVE ΣΥΝΧΡΟΝΙΣΜΟΣ
 db.ref('/').on('value', (snapshot) => {
 const data = snapshot.val() || {};
 refreshUI(data);
@@ -146,9 +154,17 @@ db.ref('settings').set({
 p1: document.getElementById('m-p1').value,
 p2: document.getElementById('m-p2').value,
 p3: document.getElementById('m-p3').value,
-limit: document.getElementById('m-limit').value
+limit: document.getElementById('m-limit').value,
+drawVisible: document.getElementById('m-draw-status').value
 });
-alert("Έγινε! Όλοι βλέπουν τα νέα έπαθλα.");
+alert("Ενημερώθηκε!");
+}
+
+function resetDrawOnly() {
+if(confirm("Θέλεις να καθαρίσεις την τρέχουσα κλήρωση;")) {
+db.ref('lastDraw').remove();
+alert("Η κλήρωση καθαρίστηκε!");
+}
 }
 
 function joinLive() {
@@ -185,16 +201,20 @@ if(confirm("ΘΑ ΔΙΑΓΡΑΦΟΥΝ ΟΛΑ ΤΑ ΔΕΔΟΜΕΝΑ. Είσαι �
 }
 
 function refreshUI(data) {
-// Ενημέρωση Επάθλων
 const s = data.settings || {};
 document.getElementById('v-p1').innerText = s.p1 || "--";
 document.getElementById('v-p2').innerText = s.p2 || "--";
 document.getElementById('v-p3').innerText = s.p3 || "--";
 
-// Ενημέρωση Κλήρωσης
+// Εμφάνιση/Απόκρυψη Κλήρωσης
+if(s.drawVisible === "off") {
+document.getElementById('draw-btn-main').style.display = "none";
+} else {
+document.getElementById('draw-btn-main').style.display = "block";
+}
+
 document.getElementById('draw-area').innerHTML = data.lastDraw || "";
 
-// Λίστα Παικτών
 let pArr = [];
 if(data.players) {
 Object.keys(data.players).forEach(id => {
@@ -218,7 +238,6 @@ ${isMaster ? `
 </div>
 `).join('');
 
-// Έλεγχος Χρόνου
 if(s.limit) {
 const isClosed = new Date() >= new Date(s.limit);
 document.getElementById('reg-btn').disabled = isClosed;
@@ -234,6 +253,5 @@ document.getElementById('date').innerText = d.toLocaleDateString('el-GR', {weekd
 document.getElementById('clock').innerText = d.toLocaleTimeString('el-GR');
 }, 1000);
 </script>
-
 </body>
 </html>
