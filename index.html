@@ -3,50 +3,55 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tavli Live Tournament 2026</title>
+<title>Tavli Master Control</title>
 <style>
 body {
 margin: 0; font-family: 'Segoe UI', sans-serif;
 background: #1a0f0a url("https://upload.wikimedia.org/wikipedia/commons/3/30/Backgammon_lg.jpg") no-repeat center center fixed;
 background-size: cover; color: white;
 }
-.overlay { background: rgba(0, 0, 0, 0.9); min-height: 100vh; padding: 20px; box-sizing: border-box; }
-.container { max-width: 500px; margin: 0 auto; }
+.overlay { background: rgba(0, 0, 0, 0.85); min-height: 100vh; padding: 20px 10px; }
+.container { max-width: 500px; margin: auto; }
 
-.header-box {
+.header {
 text-align: center; border: 3px solid #d4af37; padding: 15px;
-border-radius: 20px; background: rgba(30, 15, 10, 0.95); margin-bottom: 20px;
+border-radius: 20px; background: rgba(40, 20, 10, 0.95); margin-bottom: 20px;
 }
-#clock { font-size: 3rem; font-weight: bold; color: #d4af37; margin: 5px 0; }
+#clock { font-size: 3rem; font-weight: bold; color: #d4af37; }
 
 .card {
-background: rgba(25, 25, 25, 0.95); padding: 20px;
+background: rgba(30, 30, 30, 0.95); padding: 20px;
 border-radius: 15px; margin-bottom: 15px; border-left: 5px solid #d4af37;
 }
-h2 { color: #d4af37; margin-top: 0; font-size: 1.1rem; text-transform: uppercase; border-bottom: 1px solid #444; padding-bottom: 8px; }
+h2 { color: #d4af37; margin-top: 0; font-size: 1.2rem; text-transform: uppercase; }
 
-input { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: 1px solid #444; background: #000; color: #fff; box-sizing: border-box; }
-
-.btn { width: 100%; padding: 15px; border: none; border-radius: 10px; cursor: pointer; font-weight: bold; text-transform: uppercase; margin: 5px 0; }
-.btn-gold { background: #d4af37; color: black; }
-.btn-draw { background: #2e7d32; color: white; }
-
-.master-panel { display: none; background: rgba(212, 175, 55, 0.1); border: 2px dashed #d4af37; padding: 15px; border-radius: 12px; margin-bottom: 15px; }
-
-.prize-row { font-size: 1.3rem; font-weight: bold; margin: 5px 0; }
-.prize-row span { color: #d4af37; }
-
-.player-item {
-display: flex; justify-content: space-between; align-items: center;
-background: rgba(255, 255, 255, 0.05); padding: 10px; margin: 5px 0; border-radius: 8px;
+input {
+width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px;
+border: 1px solid #555; background: #111; color: white; box-sizing: border-box;
 }
-.score-box { background: #d4af37; color: black; padding: 3px 8px; border-radius: 5px; font-weight: bold; }
 
-.admin-btns button { background: #27ae60; color: white; border: none; padding: 5px 10px; margin-left: 3px; border-radius: 4px; cursor: pointer; }
-.btn-del { background: #e74c3c !important; }
+.btn {
+width: 100%; padding: 15px; border: none; border-radius: 10px;
+cursor: pointer; font-weight: bold; text-transform: uppercase;
+}
+.btn-gold { background: #d4af37; color: black; }
+.btn-draw { background: #2e7d32; color: white; margin-top: 10px; }
 
-.draw-box { background: rgba(212, 175, 55, 0.1); padding: 10px; border-radius: 8px; margin-top: 10px; border: 1px solid #d4af37; text-align: center; }
-.m-login { background: none; border: none; color: #444; font-size: 0.7rem; cursor: pointer; display: block; margin: 0 auto; }
+.master-only { display: none; border: 1px dashed #d4af37; padding: 10px; margin-top: 10px; }
+
+.prize-item { font-size: 1.4rem; font-weight: bold; color: #fff; margin: 10px 0; display: block; }
+.prize-item span { color: #d4af37; }
+
+.player-row {
+display: flex; justify-content: space-between; align-items: center;
+background: rgba(255,255,255,0.1); padding: 10px; margin: 5px 0; border-radius: 8px;
+}
+.score-badge { background: #d4af37; color: black; padding: 5px 10px; border-radius: 5px; font-weight: bold; margin-right: 5px; }
+.admin-controls button { background: #2e7d32; color: white; border: none; padding: 8px; margin-left: 5px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+.del-btn { background: #cc0000 !important; }
+
+.master-btn-trigger { background: none; border: none; color: #444; font-size: 0.7rem; cursor: pointer; display: block; margin: 0 auto; }
+.draw-box { background: rgba(212, 175, 55, 0.1); padding: 10px; border-radius: 8px; margin-top: 10px; border: 1px solid #d4af37; text-align: center; font-weight: bold; }
 </style>
 </head>
 <body>
@@ -54,168 +59,167 @@ background: rgba(255, 255, 255, 0.05); padding: 10px; margin: 5px 0; border-radi
 <div class="overlay">
 <div class="container">
 
-<div class="header-box">
+<div class="header">
 <div id="date" style="font-size: 0.9rem;"></div>
 <div id="clock">00:00:00</div>
-<div style="font-weight: bold; color: #d4af37;">TAVLI MASTER 2026</div>
+<div style="color:#d4af37; font-weight: bold;">TAVLI MASTER 2026</div>
 </div>
 
-<!-- MASTER PANEL -->
-<div id="master-area" class="master-panel">
-<h2>⚙️ MASTER CONTROL</h2>
-<input type="text" id="m-p1" placeholder="1ο Έπαθλο (π.χ. 100€)">
-<input type="text" id="m-p2" placeholder="2ο Έπαθλο (π.χ. 50€)">
-<input type="text" id="m-p3" placeholder="3ο Έπαθλο (π.χ. 20€)">
+<!-- ΡΥΘΜΙΣΕΙΣ (ΜΟΝΟ ΓΙΑ MASTER) -->
+<div id="admin-settings" class="card master-only">
+<h2>⚙️ MASTER PANEL</h2>
+<input type="text" id="m-prz1" placeholder="Έπαθλο 1ου">
+<input type="text" id="m-prz2" placeholder="Έπαθλο 2ου">
+<input type="text" id="m-prz3" placeholder="Έπαθλο 3ου">
 <label>Λήξη Εγγραφών:</label>
-<input type="datetime-local" id="m-limit">
-<button class="btn btn-gold" onclick="saveMaster()">💾 ΟΡΙΣΤΙΚΟΠΟΙΗΣΗ & ΑΠΟΘΗΚΕΥΣΗ</button>
-<button class="btn btn-del" style="margin-top:20px; font-size:0.7rem;" onclick="clearAllData()">⚠️ ΔΙΑΓΡΑΦΗ ΟΛΩΝ (RESET)</button>
+<input type="datetime-local" id="m-deadline">
+<button class="btn btn-gold" style="background:#2e7d32; color:white; margin-top:10px;" onclick="confirmMaster()">💾 ΕΠΙΚΥΡΩΣΗ ΡΥΘΜΙΣΕΩΝ</button>
+<button class="btn" style="background:#444; color:white; margin-top:10px; font-size:0.7rem;" onclick="resetData()">RESET ALL (ΔΙΑΓΡΑΦΗ ΠΑΝΤΩΝ)</button>
 </div>
 
-<!-- PRIZES -->
+<!-- ΕΠΑΘΛΑ -->
 <div class="card">
 <h2>🏆 ΕΠΑΘΛΑ ΤΟΥΡΝΟΥΑ</h2>
-<div class="prize-row">🥇 1ος: <span id="v-p1">--</span></div>
-<div class="prize-row">🥈 2ος: <span id="v-p2">--</span></div>
-<div class="prize-row">🥉 3ος: <span id="v-p3">--</span></div>
+<div class="prize-item">🥇 1ος: <span id="view-p1">--</span></div>
+<div class="prize-item">🥈 2ος: <span id="view-p2">--</span></div>
+<div class="prize-item">🥉 3ος: <span id="view-p3">--</span></div>
 </div>
 
-<!-- REGISTRATION -->
+<!-- ΕΓΓΡΑΦΗ -->
 <div class="card">
 <h2>📝 ΔΗΛΩΣΗ ΣΥΜΜΕΤΟΧΗΣ</h2>
-<div id="reg-msg" style="text-align:center; font-weight:bold; margin-bottom:10px;"></div>
-<input type="text" id="p-input" placeholder="Το όνομά σου...">
-<button id="reg-btn" class="btn btn-gold" onclick="addPlayer()">ΥΠΟΒΟΛΗ ΣΥΜΜΕΤΟΧΗΣ</button>
+<div id="reg-status" style="text-align:center; color:#ff4444; font-weight:bold; margin-bottom:5px;"></div>
+<input type="text" id="p-name" placeholder="Το όνομά σου...">
+<button id="add-btn" class="btn btn-gold" onclick="addPlayer()">ΥΠΟΒΟΛΗ</button>
 </div>
 
-<!-- DRAW -->
+<!-- ΚΛΗΡΩΣΗ (ΕΞΩ ΑΠΟ ΤΟ MASTER) -->
 <div class="card">
 <h2>🎲 ΚΛΗΡΩΣΗ ΖΕΥΓΑΡΙΩΝ</h2>
-<button class="btn btn-draw" onclick="makeDraw()">🔥 ΚΛΗΡΩΣΗ ΤΩΡΑ</button>
-<div id="draw-res"></div>
+<button class="btn btn-draw" onclick="doDraw()">🔥 ΚΛΗΡΩΣΗ ΤΩΡΑ</button>
+<div id="draw-results"></div>
 </div>
 
-<!-- LEADERBOARD -->
+<!-- ΚΑΤΑΤΑΞΗ -->
 <div class="card">
-<h2>📊 ΚΑΤΑΤΑΞΗ</h2>
-<div id="p-list"></div>
+<h2>📊 ΚΑΤΑΤΑΞΗ & ΝΙΚΕΣ</h2>
+<div id="player-list"></div>
 </div>
 
-<button class="m-login" onclick="loginMaster()">Master Access</button>
+<button class="master-btn-trigger" onclick="masterLogin()">Master Login</button>
 
 </div>
 </div>
 
 <script>
-// ΦΟΡΤΩΣΗ ΔΕΔΟΜΕΝΩΝ ΑΠΟ ΤΗ ΜΝΗΜΗ
+// Φόρτωση από μνήμη
 let players = JSON.parse(localStorage.getItem('tavliPlayers')) || [];
 let isMaster = false;
 
-// ΕΚΚΙΝΗΣΗ
 window.onload = () => {
 loadSettings();
 render();
 };
 
-function loginMaster() {
-if(prompt("Κωδικός:") === "1234") {
+function masterLogin() {
+if(prompt("Κωδικός Master:") === "1234") {
 isMaster = true;
-document.getElementById('master-area').style.display = 'block';
+document.getElementById('admin-settings').style.display = 'block';
 render();
 }
 }
 
-function tick() {
-const d = new Date();
-document.getElementById('date').innerText = d.toLocaleDateString('el-GR', {weekday:'long', day:'numeric', month:'long'});
-document.getElementById('clock').innerText = d.toLocaleTimeString('el-GR');
+function update() {
+const now = new Date();
+document.getElementById('date').innerText = now.toLocaleDateString('el-GR', {weekday:'long', day:'numeric', month:'long'});
+document.getElementById('clock').innerText = now.toLocaleTimeString('el-GR');
 
-let limit = localStorage.getItem('tavliLimit');
-if(limit) {
-if(new Date() >= new Date(limit)) {
-document.getElementById('reg-btn').disabled = true;
-document.getElementById('reg-msg').innerHTML = "<span style='color:#ff4444;'>🚫 ΕΓΓΡΑΦΕΣ ΕΚΛΕΙΣΑΝ</span>";
+let deadline = localStorage.getItem('tavliDeadline');
+if(deadline) {
+if(now >= new Date(deadline)) {
+document.getElementById('add-btn').disabled = true;
+document.getElementById('reg-status').innerText = "🚫 ΟΙ ΕΓΓΡΑΦΕΣ ΕΚΛΕΙΣΑΝ";
 } else {
-document.getElementById('reg-btn').disabled = false;
-document.getElementById('reg-msg').innerHTML = "<span style='color:#2ecc71;'>✅ ΕΓΓΡΑΦΕΣ ΑΝΟΙΧΤΕΣ</span>";
+document.getElementById('add-btn').disabled = false;
+document.getElementById('reg-status').innerText = "✅ ΕΓΓΡΑΦΕΣ ΑΝΟΙΧΤΕΣ";
 }
 }
 }
-setInterval(tick, 1000);
+setInterval(update, 1000);
 
-function saveMaster() {
-localStorage.setItem('tavliP1', document.getElementById('m-p1').value);
-localStorage.setItem('tavliP2', document.getElementById('m-p2').value);
-localStorage.setItem('tavliP3', document.getElementById('m-p3').value);
-localStorage.setItem('tavliLimit', document.getElementById('m-limit').value);
+function confirmMaster() {
+localStorage.setItem('p1', document.getElementById('m-prz1').value);
+localStorage.setItem('p2', document.getElementById('m-prz2').value);
+localStorage.setItem('p3', document.getElementById('m-prz3').value);
+localStorage.setItem('tavliDeadline', document.getElementById('m-deadline').value);
 loadSettings();
-alert("Οι ρυθμίσεις αποθηκεύτηκαν!");
+alert("Οι ρυθμίσεις επικυρώθηκαν και αποθηκεύτηκαν!");
 }
 
 function loadSettings() {
-document.getElementById('v-p1').innerText = localStorage.getItem('tavliP1') || "--";
-document.getElementById('v-p2').innerText = localStorage.getItem('tavliP2') || "--";
-document.getElementById('v-p3').innerText = localStorage.getItem('tavliP3') || "--";
-document.getElementById('m-p1').value = localStorage.getItem('tavliP1') || "";
-document.getElementById('m-p2').value = localStorage.getItem('tavliP2') || "";
-document.getElementById('m-p3').value = localStorage.getItem('tavliP3') || "";
-document.getElementById('m-limit').value = localStorage.getItem('tavliLimit') || "";
+document.getElementById('view-p1').innerText = localStorage.getItem('p1') || "--";
+document.getElementById('view-p2').innerText = localStorage.getItem('p2') || "--";
+document.getElementById('view-p3').innerText = localStorage.getItem('p3') || "--";
+document.getElementById('m-prz1').value = localStorage.getItem('p1') || "";
+document.getElementById('m-prz2').value = localStorage.getItem('p2') || "";
+document.getElementById('m-prz3').value = localStorage.getItem('p3') || "";
+document.getElementById('m-deadline').value = localStorage.getItem('tavliDeadline') || "";
 }
 
 function addPlayer() {
-const n = document.getElementById('p-input').value.trim();
-if(!n) return;
-players.push({ name: n, score: 0 });
-document.getElementById('p-input').value = "";
-savePlayers();
+const inp = document.getElementById('p-name');
+if(!inp.value.trim()) return;
+players.push({ name: inp.value.trim(), score: 0 });
+inp.value = "";
+saveAndRender();
 }
 
-function addPoint(i) {
+function addScore(i) {
 players[i].score++;
-savePlayers();
+saveAndRender();
 }
 
-function delPlayer(i) {
-if(confirm("Διαγραφή;")) {
+function removePlayer(i) {
+if(confirm("Διαγραφή παίκτη;")) {
 players.splice(i, 1);
-savePlayers();
+saveAndRender();
 }
 }
 
-function savePlayers() {
+function doDraw() {
+if(players.length < 2) return alert("Χρειάζονται τουλάχιστον 2 παίκτες!");
+let shuf = [...players].sort(() => Math.random() - 0.5);
+let html = "<h3>ΤΑ ΖΕΥΓΑΡΙΑ:</h3>";
+for(let i=0; i<shuf.length; i+=2) {
+html += `<div class="draw-box">${shuf[i].name} VS ${shuf[i+1] ? shuf[i+1].name : "ΡΕΠΟ"}</div>`;
+}
+document.getElementById('draw-results').innerHTML = html;
+}
+
+function saveAndRender() {
 localStorage.setItem('tavliPlayers', JSON.stringify(players));
 render();
 }
 
-function clearAllData() {
-if(confirm("ΠΡΟΣΟΧΗ! Θα διαγραφούν τα πάντα. Είσαι σίγουρος;")) {
+function resetData() {
+if(confirm("Θα σβηστούν τα πάντα! Είσαι σίγουρος;")) {
 localStorage.clear();
 location.reload();
 }
 }
 
-function makeDraw() {
-if(players.length < 2) return alert("Βάλε παίκτες!");
-let shuf = [...players].sort(() => Math.random() - 0.5);
-let res = "<h3>ΖΕΥΓΑΡΙΑ:</h3>";
-for(let i=0; i<shuf.length; i+=2) {
-res += `<div class="draw-box">${shuf[i].name} VS ${shuf[i+1] ? shuf[i+1].name : "ΡΕΠΟ"}</div>`;
-}
-document.getElementById('draw-res').innerHTML = res;
-}
-
 function render() {
 players.sort((a, b) => b.score - a.score);
-const list = document.getElementById('p-list');
+const list = document.getElementById('player-list');
 list.innerHTML = players.map((p, i) => `
-<div class="player-item">
+<div class="player-row">
 <span><b>#${i+1}</b> ${p.name}</span>
 <div style="display:flex; align-items:center;">
-<span class="score-box">${p.score} ΝΙΚΕΣ</span>
+<span class="score-badge">${p.score} ΝΙΚΕΣ</span>
 ${isMaster ? `
-<div class="admin-btns">
-<button onclick="addPoint(${i})">+1</button>
-<button class="btn-del" onclick="delPlayer(${i})">X</button>
+<div class="admin-controls">
+<button onclick="addScore(${i})">+1</button>
+<button class="del-btn" onclick="removePlayer(${i})">X</button>
 </div>
 ` : ''}
 </div>
