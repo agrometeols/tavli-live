@@ -3,112 +3,161 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Τάβλι Tournament Pro</title>
+    <title>Tavli Master Tournament</title>
     <style>
+        :root {
+            --wood: #3e2723;
+            --gold: #d4af37;
+            --light: #f5f5f5;
+        }
         body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background: #2c1a12; 
-            color: #f0d9b5; 
-            text-align: center; 
-            padding: 20px; 
+            font-family: 'Segoe UI', sans-serif; 
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1590074213038-038c11765955?auto=format&fit=crop&q=80&w=1000');
+            background-size: cover; background-attachment: fixed;
+            color: var(--light); margin: 0; padding: 10px;
         }
-        .board { 
-            max-width: 500px; 
-            margin: auto; 
-            background: #4d2d1e; 
-            padding: 30px; 
-            border-radius: 20px; 
-            border: 10px solid #361f15; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8); 
-        }
-        h1 { color: #f39c12; text-shadow: 2px 2px #000; }
-        .input-area { margin-bottom: 20px; display: flex; gap: 5px; }
-        input { 
-            flex: 1; 
-            padding: 12px; 
-            border-radius: 5px; 
-            border: none; 
-            font-size: 16px; 
-        }
-        button { 
-            padding: 10px 15px; 
-            border-radius: 5px; 
-            border: none; 
-            cursor: pointer; 
-            font-weight: bold; 
-            transition: 0.3s; 
-        }
-        .add-btn { background: #f39c12; color: #000; }
-        .draw-btn { 
-            background: #27ae60; 
-            color: white; 
-            width: 100%; 
-            font-size: 1.2em; 
-            margin-top: 10px; 
-        }
-        ul { list-style: none; padding: 0; text-align: left; }
-        li { 
-            background: #3d2418; 
-            margin: 5px 0; 
-            padding: 10px; 
-            border-radius: 5px; 
-            border-left: 4px solid #f39c12; 
-            display: flex; 
-            justify-content: space-between; 
-        }
-        .match-card { 
-            background: #5d3a2a; 
-            padding: 15px; 
-            margin-top: 15px; 
-            border-radius: 10px; 
-            border: 1px solid #7d5a4a; 
-            font-size: 1.2em; 
-            font-weight: bold; 
-            color: #fff; 
-        }
-        .vs { color: #f39c12; font-style: italic; font-size: 0.8em; }
+        .app-container { max-width: 500px; margin: auto; }
+        .header { background: var(--wood); border: 2px solid var(--gold); border-radius: 15px; padding: 15px; margin-bottom: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+        .clock { font-size: 1.2em; color: var(--gold); font-weight: bold; margin-bottom: 10px; }
+        
+        .card { background: rgba(62, 39, 35, 0.9); border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #5d4037; }
+        h2 { border-bottom: 2px solid var(--gold); padding-bottom: 5px; color: var(--gold); margin-top: 0; font-size: 1.3em; }
+
+        input, select { padding: 12px; border-radius: 8px; border: none; margin-bottom: 10px; font-size: 16px; width: -webkit-fill-available; }
+        button { padding: 12px; border-radius: 8px; border: none; cursor: pointer; font-weight: bold; text-transform: uppercase; transition: 0.2s; }
+        .btn-gold { background: var(--gold); color: black; width: 100%; }
+        .btn-green { background: #2e7d32; color: white; width: 100%; margin-top: 10px; }
+        
+        .player-row { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); margin: 5px 0; padding: 8px 12px; border-radius: 8px; }
+        .score-controls button { padding: 5px 10px; margin-left: 5px; background: #5d4037; color: white; }
+        .delete-btn { background: #c62828 !important; font-size: 12px; padding: 5px !important; }
+
+        .match-card { background: #1b5e20; border: 2px solid var(--gold); padding: 15px; border-radius: 10px; margin-top: 10px; font-size: 1.1em; display: flex; justify-content: space-around; align-items: center; }
+        .vs-badge { background: var(--gold); color: black; padding: 2px 8px; border-radius: 5px; font-size: 0.8em; font-weight: bold; }
+        
+        .leaderboard-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .leaderboard-table th { color: var(--gold); text-align: left; }
+        .leaderboard-table td { padding: 8px 0; border-bottom: 1px solid #5d4037; }
+        .points-box { color: var(--gold); font-weight: bold; font-size: 1.2em; }
     </style>
 </head>
 <body>
 
-<div class="board">
-    <h1>🎲 Tournoua Tavli</h1>
-    <div class="input-area">
-        <input type="text" id="pName" placeholder="Όνομα παίκτη...">
-        <button class="add-btn" onclick="addPlayer()">Προσθήκη</button>
+<div class="app-container">
+    <div class="header">
+        <div class="clock" id="clock">00:00:00</div>
+        <h1 style="margin:0; font-size:1.5em;">🎲 TAVLI CHAMPIONS</h1>
     </div>
-    <ul id="list"></ul>
-    <button class="draw-btn" onclick="generate()">🔥 ΕΝΑΡΞΗ ΚΛΗΡΩΣΗΣ</button>
-    <div id="results"></div>
+
+    <!-- Ρυθμίσεις -->
+    <div class="card">
+        <h2>⚙️ ΡΥΘΜΙΣΕΙΣ</h2>
+        <input type="text" id="prize" placeholder="Έπαθλο (π.χ. Καφές / 50€)">
+        <input type="number" id="maxPoints" placeholder="Πόντοι για τη νίκη (π.χ. 7)">
+    </div>
+
+    <!-- Προσθήκη Παικτών -->
+    <div class="card">
+        <h2>👥 ΠΑΙΚΤΕΣ</h2>
+        <div style="display:flex; gap:5px;">
+            <input type="text" id="playerName" placeholder="Όνομα..." style="margin:0;">
+            <button class="btn-gold" onclick="addPlayer()" style="width:auto;">+</button>
+        </div>
+        <div id="playerList" style="margin-top:15px;"></div>
+    </div>
+
+    <!-- Κλήρωση -->
+    <div class="card">
+        <button class="btn-green" onclick="drawMatches()">🔥 ΚΛΗΡΩΣΗ ΖΕΥΓΑΡΙΩΝ</button>
+        <div id="matchDisplay"></div>
+    </div>
+
+    <!-- Κατάταξη -->
+    <div class="card">
+        <h2>🏆 ΚΑΤΑΤΑΞΗ</h2>
+        <table class="leaderboard-table">
+            <thead>
+                <tr><th>Θέση</th><th>Παίκτης</th><th>Πόντοι</th></tr>
+            </thead>
+            <tbody id="rankingTable"></tbody>
+        </table>
+        <div id="prizeDisplay" style="margin-top:15px; color:var(--gold); font-weight:bold;"></div>
+    </div>
 </div>
 
 <script>
     let players = [];
+
+    // Ρολόι
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('clock').innerText = now.toLocaleTimeString('el-GR');
+    }
+    setInterval(updateClock, 1000);
+
+    // Προσθήκη
     function addPlayer() {
-        const inp = document.getElementById('pName');
-        if(inp.value.trim() !== "") {
-            players.push(inp.value.trim());
-            render();
-            inp.value = "";
+        const name = document.getElementById('playerName').value.trim();
+        if(!name) return;
+        players.push({ name: name, score: 0 });
+        document.getElementById('playerName').value = "";
+        renderAll();
+    }
+
+    // Διαγραφή με ερώτηση
+    function deletePlayer(index) {
+        if(confirm("Είσαι σίγουρος ότι θέλεις να διαγράψεις τον παίκτη " + players[index].name + ";")) {
+            players.splice(index, 1);
+            renderAll();
         }
     }
-    function render() {
-        document.getElementById('list').innerHTML = players.map(p => `<li>👤 ${p}</li>`).join('');
+
+    // Διαχείριση Σκορ
+    function updateScore(index, val) {
+        players[index].score += val;
+        if(players[index].score < 0) players[index].score = 0;
+        
+        const limit = document.getElementById('maxPoints').value;
+        if(limit && players[index].score >= limit) {
+            alert("🏆 Ο " + players[index].name + " ΕΙΝΑΙ Ο ΝΙΚΗΤΗΣ ΤΟΥ ΤΟΥΡΝΟΥΑ!");
+        }
+        renderAll();
     }
-    function generate() {
-        if(players.length < 2) return alert("Βάλε τουλάχιστον 2 παίκτες!");
+
+    // Κλήρωση
+    function drawMatches() {
+        if(players.length < 2) return alert("Χρειάζονται τουλάχιστον 2 παίκτες!");
         let shuffled = [...players].sort(() => Math.random() - 0.5);
-        let resHTML = "<h2>Τα Ζευγάρια:</h2>";
-        for(let i=0; i < shuffled.length; i+=2) {
+        let html = "<h2>ΑΓΩΝΕΣ</h2>";
+        for(let i=0; i<shuffled.length; i+=2) {
             if(shuffled[i+1]) {
-                resHTML += `<div class="match-card">${shuffled[i]} <span class="vs">VS</span> ${shuffled[i+1]}</div>`;
+                html += `<div class="match-card">
+                            <span>${shuffled[i].name}</span>
+                            <span class="vs-badge">VS</span>
+                            <span>${shuffled[i+1].name}</span>
+                         </div>`;
             } else {
-                resHTML += `<div class="match-card" style="border-color: #27ae60;">🌟 ${shuffled[i]} <br><span style="font-size:0.6em; color:#27ae60">ΠΕΡΝΑΕΙ BYE (ΧΩΡΙΣ ΑΝΤΙΠΑΛΟ)</span></div>`;
+                html += `<div class="match-card" style="background:#455a64">
+                            <span>${shuffled[i].name}</span>
+                            <span class="vs-badge">BYE (ΠΕΡΝΑΕΙ)</span>
+                         </div>`;
             }
         }
-        document.getElementById('results').innerHTML = resHTML;
+        document.getElementById('matchDisplay').innerHTML = html;
     }
-</script>
 
-</body>
-</html>
+    function renderAll() {
+        // Λίστα Διαγραφής
+        const list = document.getElementById('playerList');
+        list.innerHTML = players.map((p, i) => `
+            <div class="player-row">
+                <span>${p.name}</span>
+                <div class="score-controls">
+                    <button onclick="updateScore(${i}, 1)">+1</button>
+                    <button class="delete-btn" onclick="deletePlayer(${i})">X</button>
+                </div>
+            </div>
+        `).join('');
+
+        // Πίνακας Κατάταξης (Sort by score)
+        const sorted = [...players].sort((a,b) => b.s
